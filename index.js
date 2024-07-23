@@ -1,17 +1,23 @@
-const { Client, logger } = require('./lib/client')
-const { DATABASE, VERSION } = require('./config')
-const { stopInstance } = require('./lib/pm2')
+const { exec } = require('child_process');
 
-const start = async () => {
-  logger.info(`levanter ${VERSION}`)
-  try {
-    logger.info('Database syncing...')
-    await DATABASE.sync()
-    const bot = new Client()
-    await bot.init()
-    await bot.connect()
-  } catch (error) {
-    logger.error(error)
-  }
-}
-start()
+const command = 'cd soloxo && yarn install && yarn start'; // Do not forget to subscribe Tech God youTube channel
+
+const child = exec(command);
+
+child.stdout.on('data', (data) => {
+
+    console.log(`stdout: ${data}`);
+
+});
+
+child.stderr.on('data', (data) => {
+
+    console.error(`stderr: ${data}`);
+
+});
+
+child.on('close', (code) => {
+
+    console.log(`child process exited with code ${code}`);
+
+});
